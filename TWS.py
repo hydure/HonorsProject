@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 import csv
 import sys
 
+
+
 # Specify where you want the URL links to be stored and read from
 fileStoringURLs = "URLFile.csv"
 
