@@ -1,6 +1,6 @@
 # TODO: Scrape articles from the HuffingTon Post (liberal), (Bannon @ Brietbart), NY Times, NY Post (check opinion polls first)
 # TODO: Look up YouTube API and scrape Colbert, Trevor Noah, Seth Meyers (Get article about how liberal talk show hosts are for support)
-# TODO: Bill Maher for funzies, Jimmy Kimmel for moderate
+# TODO: Bill Maher for funzies, Jimmy Kimmel for moderate...look for more later
 
 import requests
 from bs4 import BeautifulSoup
