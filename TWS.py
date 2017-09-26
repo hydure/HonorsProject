@@ -1,4 +1,6 @@
 # TODO: Scrape articles from the HuffingTon Post (liberal), (Bannon @ Brietbart), NY Times, NY Post (check opinion polls first)
+# TODO: Look up YouTube API and scrape Colbert, Trevor Noah, Seth Meyers (Get article about how liberal talk show hosts are for support)
+# TODO: Bill Maher for funzies, Jimmy Kimmel for moderate
 
 import requests
 from bs4 import BeautifulSoup
@@ -86,7 +88,7 @@ def getTheFiveTranscripts(csv):
 #######################################################################################
 
 def getHannityTranscripts(csv):
-    # Collects all transcript links from Hannity's show
+    # Collects all transcript links from Sean Hannity's show
     for x in range(1, 300):
         result = requests.get("http://www.foxnews.com/on-air/hannity/transcripts?page={}".format(x))
         soup = BeautifulSoup(result.content, "html.parser")
@@ -101,7 +103,7 @@ def getHannityTranscripts(csv):
 #######################################################################################
 
 def getCoulterTranscripts(csv):
-    # Collects all transcript links from Coulter's show
+    # Collects all transcript links from Ann Coulter's show
     result = requests.get("http://www.anncoulter.com/archives.html")
     soup = BeautifulSoup(result.content, "html.parser")
     links = soup.find_all("a")
