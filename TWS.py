@@ -1,7 +1,7 @@
 # TODO: Scrape articles from the HuffingTon Post (liberal), (Bannon @ Brietbart), NY Times, NY Post (check opinion polls first)
 # TODO: Look up YouTube API and scrape Colbert, Trevor Noah, Seth Meyers (Get article about how liberal talk show hosts are for support)
 # TODO: Bill Maher for funzies, Jimmy Kimmel for moderate...look for more late
-# TODO: Google Express web app using Node Expresss
+# TODO: Read ML book on how to create ML algo and uplaod to web app
 
 import requests
 from bs4 import BeautifulSoup
