@@ -1,0 +1,8 @@
+form {
+    display: flex; /* 2. display flex to the rescue */
+    flex-direction: row;
+}
+textarea#inputString{
+    height: 16px;
+    width: 200px;
+}
