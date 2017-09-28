@@ -1,5 +1,5 @@
 form {
-    display: flex; /* 2. display flex to the rescue */
+    display: flex;
     flex-direction: row;
 }
 textarea#inputString{
