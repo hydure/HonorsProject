@@ -1,19 +1,31 @@
 <!doctype html>
+
 <html>
     <head>
         <title>Fair & Balanced News</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></link>
+        <meta charset=utf-8> 
     </head>
     <body>
-        {% from "_formhelpers.html" import render_field %}
-
-        <h1 style="text-align: center;">Fair & Balanced News</h1>
+        <h1 style='text-align: center;'>Fair & Balanced News</h1>
         <div style="width:500px; margin: 0 auto">
-            <h5>What news do you want to search for?</h5>
-            <form method=post action="/results" style="text-align: center;">
+            <h5 style='text-align: center;'>What news do you want to search for?</h5>
+            <form method=post action="/" style="text-align: center;">
                 <input type="text" id="inputString" name="inputString"/>
                 <input type=submit value='Search' name='search_btn'>
             </form>
+            <br>
+            
+            <table align="center" border="1">
+                <tr>
+                    <th>Most Popular Liberal View</th>
+                    <th>Most Popular Conservative View</th>
+                </tr>
+                <tr>
+                    <td style='text-align: center;'>{{ conservativeURL }}</td>
+                    <td style='text-align: center;'>{{ liberalURL }}</td>
+                </tr>
+
+            </table>
         </div>
     </body>
 </html>

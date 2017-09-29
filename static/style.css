@@ -1,8 +1,0 @@
-form {
-    display: flex;
-    flex-direction: row;
-}
-textarea#inputString{
-    height: 16px;
-    width: 200px;
-}
