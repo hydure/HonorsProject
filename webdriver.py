@@ -18,7 +18,7 @@ class SearchForm(Form):
 @app.route('/')
 def index():
     form = SearchForm(request.form)
-    return render_template('Website.html', form=form)
+    return render_template('Website.html')
 
 @app.route('/', methods=['POST'])
 def results():
@@ -28,57 +28,69 @@ def results():
 
         driver = webdriver.PhantomJS()  # Creates an invisible browser
         driver.get('https://google.com/') # Navigates to Google.com
-
         searchBarInput = driver.find_element_by_name('q') # Assigns variable to Google Search bar
         if inputString != '':
-            searchBarInput.send_keys(inputString + " news") # what you are searching for
+            searchBarInput.send_keys(inputString) # what you are searching for
             searchBarInput.send_keys(Keys.RETURN) # Hit <RETURN> so Google begins searching
             time.sleep(1) # sleep for a bit so the results webpage will be rendered
 
-            # TODO: scrape first two websites that are in the top 10 news websites
-            #       (top 10 according to http://blog.feedspot.com/usa_news_websites/ 's metrics)
+            # scrape first liberal and first conservative websites that are in the top 10 news websites
+            # (top 10 according to http://blog.feedspot.com/usa_news_websites/ 's metrics)
             urls = driver.find_elements_by_css_selector('h3.r a')
             conservativeURL = ' '
             liberalURL = ' '
-            test = None
-            # TODO: Make it go to the next page and continue mining until 
-            #while conservativeURL != ' ' and liberalURL != ' ':
-            for url in urls:
-                # TODO: scrape according to each website's layout and then run ML algorithm
-                # TODO: check if one website is liberal and the other is conservative,
-                #       if not scape the next website until requirements are met
-                test = url
+
+            # Continue mining until conservative- and liberalURL are found
+            while conservativeURL == ' ' or liberalURL == ' ':
+                urls = driver.find_elements_by_css_selector('h3.r a')
+                for url in urls:
+                    # TODO: scrape according to each website's layout and then run ML algorithm
+                    # TODO: check if one website is liberal and the other is conservative,
+                    #       if not scape the next website until requirements are met
+                    test = url
+                    if conservativeURL != ' ' and liberalURL != ' ':
+                        break
+                    print(url.get_attribute('href')[29:] + "\n\n")
+                    if "cnn.com" in url.get_attribute('href')[29:]: # 1
+                        cLinkName = "CNN Article"
+                        conservativeURL = url.get_attribute('href')[29:]
+                    if "nytimes.com" in url.get_attribute('href')[29:]: # 2
+                        lLinkName = "NY Times Article"
+                        liberalURL = url.get_attribute('href')[29:]
+                    if "huffingtonpost.com" in url.get_attribute('href')[29:]: # 3
+                        pass
+                    if "foxnews.com" in url.get_attribute('href')[29:]: # 4
+                        pass
+                    if "usatoday.com" in url.get_attribute('href')[29:]: # 5
+                        pass
+                    if "reuters.com" in url.get_attribute('href')[29:]: # 6
+                        pass
+                    if "politico.com" in url.get_attribute('href')[29:]: # 7
+                        pass
+                    if "yahoo.com/news" in url.get_attribute('href')[29:]: # 8
+                        pass
+                    if "npr.org" in url.get_attribute('href')[29:]: # 9
+                        pass
+                    if "latimes.com" in url.get_attribute('href')[29:]: # 10
+                        pass
+                    if "washingtonpost.com" in url.get_attribute('href')[29:]: # requested
+                        pass
+
                 if conservativeURL != ' ' and liberalURL != ' ':
                     break
-                print(url.get_attribute('href')[29:] + "\n\n")
-                if "cnn.com" in url.get_attribute('href')[29:]: # 1
-                    pass
-                if "nytimes.com" in url.get_attribute('href')[29:]: # 2
-                    pass
-                if "huffingtonpost.com" in url.get_attribute('href')[29:]: # 3
-                    pass
-                if "foxnews.com" in url.get_attribute('href')[29:]: # 4
-                    pass
-                if "usatoday.com" in url.get_attribute('href')[29:]: # 5
-                    pass
-                if "reuters.com" in url.get_attribute('href')[29:]: # 6
-                    pass
-                if "politico.com" in url.get_attribute('href')[29:]: # 7
-                    pass
-                if "yahoo.com/news" in url.get_attribute('href')[29:]: # 8
-                    pass
-                if "npr.org" in url.get_attribute('href')[29:]: # 9
-                    pass
-                if "latimes.com" in url.get_attribute('href')[29:]: # 10
-                    pass
-                
-            conservativeURL = test
-            liberalURL = test
+
+                # Go to the next page to continue the process
+                nextPage = driver.find_element_by_link_text("Next").click()
             
             driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
         driver.quit()
 
-    return render_template('Website.html', form=form)
+    return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
+                            conservativeURL=conservativeURL, liberalURL=liberalURL)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
+
+# Had trouble accessing the google news search element and there was no supporting, non-deprecated info for it
+# results found looking from the first result in the first result page and continue sequentially. Results are found
+# by Google's algorithm to generate the most "relevant" results related to the search query
