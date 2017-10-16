@@ -5,10 +5,12 @@
 # TODO: 
 from flask import Flask, render_template, request
 from wtforms import Form, TextAreaField, validators
-import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from string import Template
+import time
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -45,35 +47,50 @@ def results():
                 urls = driver.find_elements_by_css_selector('h3.r a')
                 for url in urls:
                     # TODO: scrape according to each website's layout and then run ML algorithm
-                    # TODO: check if one website is liberal and the other is conservative,
-                    #       if not scape the next website until requirements are met
-                    test = url
                     if conservativeURL != ' ' and liberalURL != ' ':
                         break
-                    print(url.get_attribute('href')[29:] + "\n\n")
-                    if "cnn.com" in url.get_attribute('href')[29:]: # 1
+                    stoppingPoint = url.get_attribute('href').index('&')
+                    url = url.get_attribute('href')[29 : stoppingPoint]
+                    print(url)
+                    if '?q=' in url:
+                        continue
+                    if "cnn.com" in url: # 1
                         cLinkName = "CNN Article"
-                        conservativeURL = url.get_attribute('href')[29:]
-                    if "nytimes.com" in url.get_attribute('href')[29:]: # 2
+                        conservativeURL = url
+                        lookAtPage = requests.get(url)
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('div', {"class":"zn-body__paragraph"})
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        #print(text)
+                    if "nytimes.com" in url: # 2
                         lLinkName = "NY Times Article"
-                        liberalURL = url.get_attribute('href')[29:]
-                    if "huffingtonpost.com" in url.get_attribute('href')[29:]: # 3
+                        liberalURL = url
+                        lookAtPage = requests.get(url)
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('p', {"class":"story-body-text story-content"})
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        #print(text)
+                    if "huffingtonpost.com" in url: # 3
                         pass
-                    if "foxnews.com" in url.get_attribute('href')[29:]: # 4
+                    if "foxnews.com" in url: # 4
                         pass
-                    if "usatoday.com" in url.get_attribute('href')[29:]: # 5
+                    if "usatoday.com" in url: # 5
                         pass
-                    if "reuters.com" in url.get_attribute('href')[29:]: # 6
+                    if "reuters.com" in url: # 6
                         pass
-                    if "politico.com" in url.get_attribute('href')[29:]: # 7
+                    if "politico.com" in url: # 7
                         pass
-                    if "yahoo.com/news" in url.get_attribute('href')[29:]: # 8
+                    if "yahoo.com/news" in url: # 8
                         pass
-                    if "npr.org" in url.get_attribute('href')[29:]: # 9
+                    if "npr.org" in url: # 9
                         pass
-                    if "latimes.com" in url.get_attribute('href')[29:]: # 10
+                    if "latimes.com" in url: # 10
                         pass
-                    if "washingtonpost.com" in url.get_attribute('href')[29:]: # requested
+                    if "washingtonpost.com" in url: # requested
                         pass
 
                 if conservativeURL != ' ' and liberalURL != ' ':
