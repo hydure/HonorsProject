@@ -1,7 +1,7 @@
 import cPickle
 
 if __name__ == '__main__':
-    [lib, con, neutral] = cPickle.load(open('sampleData.pkl', 'rb'))
+    [lib, con, neutral] = cPickle.load(open('ibcData.pkl', 'rb'))
 
     # how to access sentence text
     print 'Liberal examples (out of ', len(lib), ' sentences): '

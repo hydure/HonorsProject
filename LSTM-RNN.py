@@ -27,7 +27,7 @@ y = sms.label_num
 print(X.shape)
 print(y.shape)
 
-# load the dataset 
+# load the dataset but only keep the top n words, zero the rest
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 top_words = 5000
 
