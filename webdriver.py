@@ -121,10 +121,11 @@ def results():
                         text = ''
                         for paragraph in paragraphs:
                             text = text + paragraph.text
-                        print(text)
+                        #print(text)
                         checkURL(url, text, linkName)
 
                     if "foxnews.com" in url: # 4
+                        continue
                         linkName = "Fox News Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -133,22 +134,33 @@ def results():
                         for paragraph in paragraphs:
                             text = text + paragraph.text
                         text = text[161:-162]
-                        print(text)
+                        #print(text)
                         checkURL(url, text, linkName)
 
                     if "usatoday.com" in url: # 5
-                        pass
+                        continue
                         linkName = "USA Today Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        #checkURL(url, text, linkName)
+                        paragraphs = soup.find_all('p', {"class":"p-text"})
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        #print(text)
+                        checkURL(url, text, linkName)
 
                     if "reuters.com" in url: # 6
-                        pass
+                        continue
                         linkName = "Reuters Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        #checkURL(url, text, linkName)
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        text = text[:-36]
+                        #print(text)
+                        checkURL(url, text, linkName)
 
                     if "politico.com" in url: # 7
                         pass
