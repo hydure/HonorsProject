@@ -2,7 +2,7 @@
 # https://stackoverflow.com/questions/13287490/is-there-a-way-to-use-phantomjs-in-python
 
 # TODO: Look at pp. 264 - 275 for further information regarding Flask-based web apps
-# TODO: Run scraped texts against ML algorithm to generate a number
+# TODO: Run scraped texts against ML algorithm to generate a number in checkURL
 from flask import Flask, render_template, request
 from wtforms import Form, TextAreaField, validators
 from selenium import webdriver
@@ -13,9 +13,9 @@ import requests
 from bs4 import BeautifulSoup
 
 conservativeURL = ' '
-liberalURL = ' '
-cLinkName = ' '
-lLinkName = ' '
+liberalURL      = ' '
+cLinkName       = ' '
+lLinkName       = ' '
 
 
 # TODO: Run text through algorithm and determine if url should fill either conservative
@@ -25,7 +25,12 @@ def checkURL(url, text, linkName):
     global liberalURL
     global cLinkName
     global lLinkName
-    pass
+    if conservativeURL == ' ':
+        conservativeURL = url
+        cLinkName = linkName
+    elif liberalURL == ' ':
+        liberalURL = url
+        lLinkName = linkName
 
 app = Flask(__name__)
 
@@ -49,11 +54,11 @@ def results():
     if request.method == 'POST' and form.validate():
         inputString = request.form['inputString']
 
-        driver = webdriver.PhantomJS()  # Creates an invisible browser
+        driver = webdriver.PhantomJS()    # Creates an invisible browser
         driver.get('https://google.com/') # Navigates to Google.com
         searchBarInput = driver.find_element_by_name('q') # Assigns variable to Google Search bar
         if inputString != '':
-            searchBarInput.send_keys(inputString) # what you are searching for
+            searchBarInput.send_keys(inputString + " news") # what you are searching for
             searchBarInput.send_keys(Keys.RETURN) # Hit <RETURN> so Google begins searching
             time.sleep(1) # sleep for a bit so the results webpage will be rendered
 
@@ -79,6 +84,7 @@ def results():
                         continue
 
                     if "cnn.com" in url: # 1
+                        continue
                         #cLinkName = "CNN Article"
                         #conservativeURL = url
                         linkName = "CNN Article"
@@ -90,11 +96,10 @@ def results():
                         for paragraph in paragraphs:
                             text = text + paragraph.text
                         #print(text)
-                        # TODO: For all links, check to see if they fit into either
-                        #       the conservative or liberal URL spots
                         checkURL(url, text, linkName)
 
                     if "nytimes.com" in url: # 2
+                        continue
                         #lLinkName = "NY Times Article"
                         #liberalURL = url
                         linkName = "NY Times Article"
@@ -108,68 +113,71 @@ def results():
                         #print(text)
 
                     if "huffingtonpost.com" in url: # 3
-                        lLinkName = "Huffington Post"
-                        liberalURL = url
-                        #linkName = "Huffington Post"
+                        continue
+                        linkName = "Huffington Post Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        #paragraphs = soup.find_all('p')
+                        paragraphs = soup.find_all('p', {"class":"p1"})
                         text = ''
-                        #for paragraph in paragraphs:
-                            #text = text + paragraph.text
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
                         print(text)
                         checkURL(url, text, linkName)
 
                     if "foxnews.com" in url: # 4
-                        cLinkName = "Fox News"
-                        conservativeURL = url
-                        #linkName = "Fox News"
+                        linkName = "Fox News Article"
                         lookAtPage = requests.get(url)
-                        #soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        text = text[161:-162]
+                        print(text)
                         checkURL(url, text, linkName)
 
                     if "usatoday.com" in url: # 5
                         pass
-                        linkName = "USA Today"
+                        linkName = "USA Today Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        checkURL(url, text, linkName)
+                        #checkURL(url, text, linkName)
 
                     if "reuters.com" in url: # 6
                         pass
-                        linkName = "Reuters"
+                        linkName = "Reuters Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        checkURL(url, text, linkName)
+                        #checkURL(url, text, linkName)
 
                     if "politico.com" in url: # 7
                         pass
-                        linkName = "Politico"
+                        linkName = "Politico Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        checkURL(url, text, linkName)
+                        #checkURL(url, text, linkName)
 
                     if "yahoo.com/news" in url: # 8
                         pass
-                        linkName = "Yahoo! News"
+                        linkName = "Yahoo! News Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        checkURL(url, text, linkName)
+                        #checkURL(url, text, linkName)
 
                     if "npr.org" in url: # 9
                         pass
-                        linkName = "NPR"
-                        checkURL(url, text, linkName)
+                        linkName = "NPR Article"
+                        #checkURL(url, text, linkName)
 
                     if "latimes.com" in url: # 10
                         pass
-                        linkName = "LA Times"
-                        checkURL(url, text, linkName)
+                        linkName = "LA Times Article"
+                        #checkURL(url, text, linkName)
 
                     if "washingtonpost.com" in url: # requested
                         pass
-                        linkName = "Washington Post"
-                        checkURL(url, text, linkName)
+                        linkName = "Washington Post Article"
+                        #checkURL(url, text, linkName)
 
                 if conservativeURL != ' ' and liberalURL != ' ':
                     break
