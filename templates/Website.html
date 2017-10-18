@@ -8,13 +8,13 @@
     <body>
         <h1 style='text-align: center;'>Fair & Balanced News</h1>
         <div style="width:500px; margin: 0 auto">
-            <h5 style='text-align: center;'>What news do you want to search for?</h5>
+            <h4 style='text-align: center;'>What news do you want to search for?</h4>
             <form method=post action="/" style="text-align: center;">
                 <input type="text" id="inputString" name="inputString"/>
                 <input type=submit value='Search' name='search_btn'>
             </form>
             <br>
-            
+            <h3 style='text-align: center;'>{{ errMessage }}</h3>
             <table align="center" border="1">
                 <tr>
                     <th>Most Popular Liberal View</th>
