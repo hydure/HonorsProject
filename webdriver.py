@@ -226,7 +226,8 @@ def results():
         driver.quit()
 
     return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
-                            conservativeURL=conservativeURL, liberalURL=liberalURL, errMessage=errMessage)
+                            conservativeURL=conservativeURL, liberalURL=liberalURL, \
+                            errMessage=errMessage)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

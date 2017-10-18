@@ -1,5 +1,4 @@
-# TODO: Waiting on approval to use the fairly robust IBC dataset found here: https://www.cs.umd.edu/~miyyer/ibc/index.html
-# TODO: upload dataset to github url and read how to access dataset info
+# TODO: Train RNN with data from ibcData.pkl
 # Got idea on how to use a custom dataset from https://stackoverflow.com/questions/41322243/how-to-use-keras-rnn-for-text-classification-in-a-dataset
 # which is based on code from this webpage: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
 # Assumed specific batch size and number of epochs from https://stackoverflow.com/questions/35050753/how-big-should-batch-size-and-number-of-epochs-be-when-fitting-a-model-in-keras
