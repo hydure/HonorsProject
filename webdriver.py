@@ -163,18 +163,27 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "politico.com" in url: # 7
-                        pass
+                        continue
                         linkName = "Politico Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        #checkURL(url, text, linkName)
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        #print(text)
+                        checkURL(url, text, linkName)
 
-                    if "yahoo.com/news" in url: # 8
-                        pass
+                    if "yahoo.com/news" in url and "tagged" not in url: # 8
                         linkName = "Yahoo! News Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
-                        #checkURL(url, text, linkName)
+                        paragraphs = soup.find_all('p', {"class":"canvas-atom"})
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        print(text)
+                        checkURL(url, text, linkName)
 
                     if "npr.org" in url: # 9
                         pass
