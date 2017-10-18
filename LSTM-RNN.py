@@ -19,34 +19,34 @@ numpy.random.seed(7)
 
 #TODO: put url here
 url = ''
-sms = pd.read_table(url, header=None, names=['label', 'message'])
+readData = pd.read_table(url, header=None, names=['label', 'message'])
 
 # convert label to a numerical variable
-sms['label_num'] = sms.label.map({'liberal':0, 'conservative':1})
-X = sms.message
-y = sms.label_num
-print(X.shape)
+readData['label_num'] = readData.label.map({'liberal' : 0, 'conservative' : 1, 'neutral': 0.5})
+x = readData.message
+y = readData.label_num
+print(x.shape)
 print(y.shape)
 
 # load the dataset but only keep the top n words, zero the rest
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=1)
 top_words = 5000
 
 # truncate and pad input sequences
 max_review_length = 500
-X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
-X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
+x_train = sequence.pad_sequences(x_train, maxlen = max_review_length)
+x_test = sequence.pad_sequences(x_test, maxlen = max_review_length)
 
 # create the model
 embedding_vecor_length = 32
 model = Sequential()
-model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length, dropout=0.2))
-model.add(LSTM(100, dropout_W=0.2, dropout_U=0.2))
-model.add(Dense(1, activation='sigmoid'))
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.add(Embedding(top_words, embedding_vecor_length, input_length = max_review_length, dropout = 0.2))
+model.add(LSTM(100, dropout_W = 0.2, dropout_U = 0.2))
+model.add(Dense(1, activation = 'sigmoid'))
+model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
 print(model.summary())
-model.fit(X_train, y_train, nb_epoch=3, batch_size=64)
+model.fit(x_train, y_train, nb_epoch=10, batch_size=64)
 
 # Final evaluation of the model
-scores = model.evaluate(X_test, y_test, verbose=0)
+scores = model.evaluate(x_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
