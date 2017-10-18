@@ -84,7 +84,6 @@ def results():
                         continue
 
                     if "cnn.com" in url: # 1
-                        continue
                         #cLinkName = "CNN Article"
                         #conservativeURL = url
                         linkName = "CNN Article"
@@ -99,7 +98,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "nytimes.com" in url: # 2
-                        continue
                         #lLinkName = "NY Times Article"
                         #liberalURL = url
                         linkName = "NY Times Article"
@@ -113,7 +111,6 @@ def results():
                         #print(text)
 
                     if "huffingtonpost.com" in url: # 3
-                        continue
                         linkName = "Huffington Post Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -125,7 +122,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "foxnews.com" in url: # 4
-                        continue
                         linkName = "Fox News Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -138,7 +134,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "usatoday.com" in url: # 5
-                        continue
                         linkName = "USA Today Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -150,7 +145,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "reuters.com" in url: # 6
-                        continue
                         linkName = "Reuters Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -163,7 +157,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "politico.com" in url: # 7
-                        continue
                         linkName = "Politico Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -186,19 +179,38 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "npr.org" in url: # 9
-                        pass
                         linkName = "NPR Article"
-                        #checkURL(url, text, linkName)
+                        lookAtPage = requests.get(url)
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        text = text[:-44]
+                        print(text)
+                        checkURL(url, text, linkName)
 
                     if "latimes.com" in url: # 10
-                        pass
                         linkName = "LA Times Article"
-                        #checkURL(url, text, linkName)
+                        lookAtPage = requests.get(url)
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        #print(text)
+                        checkURL(url, text, linkName)
 
                     if "washingtonpost.com" in url: # requested
-                        pass
                         linkName = "Washington Post Article"
-                        #checkURL(url, text, linkName)
+                        lookAtPage = requests.get(url)
+                        soup = BeautifulSoup(lookAtPage.text, "html.parser")
+                        paragraphs = soup.find_all('p')
+                        text = ''
+                        for paragraph in paragraphs:
+                            text = text + paragraph.text
+                        print(text)
+                        checkURL(url, text, linkName)
 
                 if conservativeURL != ' ' and liberalURL != ' ':
                     break
