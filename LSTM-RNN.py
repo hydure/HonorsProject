@@ -10,14 +10,15 @@ from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
-import pandaas as pd
+import pandas as pd
 from sklearn.cross_validation import train_test_split
+import pickle
 
 # fix random seed for reproducibility
 numpy.random.seed(7)
 
 #TODO: put url here
-url = '
+url = ''
 sms = pd.read_table(url, header=None, names=['label', 'message'])
 
 # convert label to a numerical variable
