@@ -3,7 +3,7 @@
 
 # TODO: Look at pp. 264 - 275 for further information regarding Flask-based web apps
 # TODO: Run scraped texts against ML algorithm to generate a number in checkURL
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,6 +16,7 @@ conservativeURL = ' '
 liberalURL      = ' '
 cLinkName       = ' '
 lLinkName       = ' '
+errMessage      = ' '
 
 
 # TODO: Run text through algorithm and determine if url should fill either conservative
@@ -39,17 +40,24 @@ class SearchForm(Form):
 
 @app.route('/')
 def index():
-    form = SearchForm(request.form)
-    return render_template('Website.html')
+    return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
+                            conservativeURL=conservativeURL, liberalURL=liberalURL, \
+                            errMessage=errMessage)
 
-@app.route('/', methods=['POST'])
+@app.route('/results', methods=['GET', 'POST'])
 def results():
     global conservativeURL
     global liberalURL
     global cLinkName
     global lLinkName
-    errMessage = ' '
+    global errMessage
 
+    conservativeURL = ' '
+    liberalURL      = ' '
+    cLinkName       = ' '
+    lLinkName       = ' '
+    errMessage      = ' '
+    
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         inputString = request.form['inputString']
@@ -214,7 +222,7 @@ def results():
 
                 if conservativeURL != ' ' and liberalURL != ' ':
                     break
-                driver.save_screenshot('screen.png') 
+
                 # Go to the next page to continue the process
                 try:
                     nextPage = driver.find_element_by_link_text("Next").click()
@@ -224,7 +232,8 @@ def results():
             
             driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
         driver.quit()
-
+        return redirect(url_for('index'))
+    print("Now I'm on the outsideeeee")
     return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
                             conservativeURL=conservativeURL, liberalURL=liberalURL, \
                             errMessage=errMessage)
