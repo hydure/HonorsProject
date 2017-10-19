@@ -1,5 +1,5 @@
 # TODO: Train RNN with data from ibcData.pkl
-# Maybe a better version? https://machinelearnings.co/tensorflow-text-classification-615198df9231
+# Maybe a better version? https://medium.com/@curiousily/making-a-predictive-keyboard-using-recurrent-neural-networks-tensorflow-for-hackers-part-v-3f238d824218
 # Got idea on how to use a custom dataset from https://stackoverflow.com/questions/41322243/how-to-use-keras-rnn-for-text-classification-in-a-dataset
 # which is based on code from this webpage: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
 # Assumed specific batch size and number of epochs from https://stackoverflow.com/questions/35050753/how-big-should-batch-size-and-number-of-epochs-be-when-fitting-a-model-in-keras
