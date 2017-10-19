@@ -1,7 +1,6 @@
 # found out how to not display web browser when using selenium here:
 # https://stackoverflow.com/questions/13287490/is-there-a-way-to-use-phantomjs-in-python
 
-# TODO: Look at pp. 264 - 275 for further information regarding Flask-based web apps
 # TODO: Run scraped texts against ML algorithm to generate a number in checkURL
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators
@@ -12,6 +11,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
+# Made these global so both @app.route functions and checkURL can access them
 conservativeURL = ' '
 liberalURL      = ' '
 cLinkName       = ' '
@@ -52,6 +52,7 @@ def results():
     global lLinkName
     global errMessage
 
+    # Need to clear these fields to run another query
     conservativeURL = ' '
     liberalURL      = ' '
     cLinkName       = ' '
@@ -183,7 +184,7 @@ def results():
                         text = ''
                         for paragraph in paragraphs:
                             text = text + paragraph.text
-                        print(text)
+                        #print(text)
                         checkURL(url, text, linkName)
 
                     if "npr.org" in url: # 9
@@ -195,7 +196,7 @@ def results():
                         for paragraph in paragraphs:
                             text = text + paragraph.text
                         text = text[:-44]
-                        print(text)
+                        #print(text)
                         checkURL(url, text, linkName)
 
                     if "latimes.com" in url: # 10
@@ -217,7 +218,7 @@ def results():
                         text = ''
                         for paragraph in paragraphs:
                             text = text + paragraph.text
-                        print(text)
+                        #print(text)
                         checkURL(url, text, linkName)
 
                 if conservativeURL != ' ' and liberalURL != ' ':
@@ -233,10 +234,6 @@ def results():
             driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
         driver.quit()
         return redirect(url_for('index'))
-    print("Now I'm on the outsideeeee")
-    return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
-                            conservativeURL=conservativeURL, liberalURL=liberalURL, \
-                            errMessage=errMessage)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
