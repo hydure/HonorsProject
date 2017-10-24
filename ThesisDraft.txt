@@ -27,7 +27,34 @@ help us reach our dream. Therefore, learning to use machine elarning algorithms 
 least political bias found in texts is still a major leap towards achieving our goal.
 
 Background Research for it:
+Research on how to create a website solely with Python and HTML, as well
+as a ton of researchon how to implement LSTM-based RNNs, and then the
+little amount of published research on hoow to perform.
+
+
+Political Bias Analysis by Arkajyoti Misra and Sanjib Basak
+How to effectively scape google search results by blubee blubeeme
+Web Scrrarping Reference by Hartley Brody
+Beautiful Soup Documentation https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+Political Ideology Detection Using Recursive Neural Networks by Iyyer et. al.
+Ranking the media from liberal to conservative, based on their audiences
+    by Aaron Blake
+A Critical Review of Recurrent Neural Networks for Sequence Learning by
+    Zachary Liption, John Berkowitz, and Charles Elkan
+Political Ideology Detection by Market Rei 
+Top 100 USA News Websites on the Web by Feedspot
+LSTM Networks for Sentiment Analysis http://deeplearning.net/tutorial/lstm.html#code
+Flask Web Development in Python - 3 - Variablees in your HTML by sentdex
+Recurrent Neural Networks Tutorial, Part 2 - Implementing a RNN with
+    Python, Numpy and Theano http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
+Anyone Can Learn to Code an LSTM-RNN in Python (Part 1: RNN) by iamtrask
+lstm repository by nicojimenez https://github.com/nicodjimenez/lstm
+Recurrent Neural Networks by Tensorflow
+An Introduction to LSTMs in Tensorflow by Center for Brains, Minds and 
+    Machines (CBMM)
+LSTM Networks - The Math of Intelligence (Week 8) by Siraj Raval
+A Beginner's Guide to Recurrent Neural Networks and LSTMs by
+    DEEPLEARNING4J
 
 
 Prior Knowledge About Topics:
-
