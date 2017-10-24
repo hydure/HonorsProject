@@ -1,24 +1,33 @@
 Motivation for Project:
-Professor Deverick first shot this idea at me when he understood that I wanted to analzye text, popular
-opinions on current events, and expand upon my machine learning skills. Not only was this a cool idea,
-but it could serve an imporatnt purpose in bridging the gap between Americans and how they perceive 
-political events and figures. I mean, I would like to know if SNL is  portraying Kellyanne Conway in an
-accurate light (i.e. defending and supporting everything President Trump states with incredibly flawed logic).
-So I gave the idea a few days of thought and could only think of more reasons to create this project.
+Professor Deverick first shot this idea at me when he understood that I wanted to analzye text, 
+popular opinions on current events, and expand upon my machine learning skills. Not only was this
+a cool idea, but it could serve an important purpose in bridging the gap between Americans and
+how they perceive political events and figures. I mean, I would like to know if SNL is
+portraying Kellyanne Conway in an accurate light (i.e. defending and supporting everything 
+President Trump states with incredibly flawed logic), of if the liberal news outlets are
+portraying Trump more harshly than a moderate or conservative news outlet would. So I gave the
+idea a few days of thought and could only think of more reasons to create this project.
 
-Almost all news outlets have an associated liberal bias to themselves. Unfortunately, most Americans
-do not have the time of day, or the care, to look at multiple news sources to see as much of the story
-without bias as possible. Some people go as far to watch only one side of the political spectrum's news,
-which leads to misunderstands on a national scale and a more deeply divided country that is already
-polarized to the catastrophic levels it is at now. Some news sites have even begun to plainly try and
-deceive their audiences, such as Fox News with its-now-gone "Fair and Balanced" news model. I would like
-to bring people to a common ground, making sure they are informed on how the most popular liberal and 
-conservative news outlets view an event so that people on all parts of the political specturm undeerstand
-the viewpoints of one another moreso than relying on one newsite over another.
+Almost all news outlets have an associated bias to themselves. Unfortunately, most Americans
+do not have the time of day, or even the care, to look at multiple news sources to see as many
+sides of the story as possible. Some people go as far to watch only one side of the political
+spectrum's news, which leads to misunderstands on a national scale and a more deeply divided
+country that is already polarized to the catastrophic levels it is at now. Some news sites have
+even begun to plainly try and deceive their audiences, such as Fox News with its-now-gone "Fair
+and Balanced" news model. I would like to bring people to a common ground, making sure they are
+informed on how the most popular liberal and conservative news outlets view an event so that
+people on all parts of the political specturm understand the viewpoints of one another moreso
+than relying on one newsite over another.
 
-Another reason for starting this project is because my loving and supportive 
+Another reason for starting this project is because my loving and supportive significant other,
+Hayden Le, and I share a belief that Americans should have easy access to public knowledge as
+well as an easy way to access said knowledge and determine the bias found in any article of 
+knowledge gathered. This is obviously an impossible dream, but binary classifications can
+help us reach our dream. Therefore, learning to use machine elarning algorithms to detect at
+least political bias found in texts is still a major leap towards achieving our goal.
 
 Background Research for it:
+
 
 Prior Knowledge About Topics:
 
