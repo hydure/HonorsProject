@@ -1,4 +1,4 @@
-# TODO: Train RNN with data from ibcData.pkl
+# TODO: Train RNN until fairly accurate (80% without overfitting) and pickle it
 # Maybe a better version? https://machinelearnings.co/tensorflow-text-classification-615198df9231
 # Got idea on how to use a custom dataset from https://stackoverflow.com/questions/41322243/how-to-use-keras-rnn-for-text-classification-in-a-dataset
 # which is based on code from this webpage: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
