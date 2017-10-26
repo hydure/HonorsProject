@@ -51,7 +51,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=RANDOM_ST
 model = Sequential()
 model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=MAX_REVIEW_LENGTH))
 model.add(LSTM(100))
-model.add(Dropout=DROPOUT)
+model.add(Dropout(DROPOUT))
 model.add(Dense(1, activation='sigmoid'))   # Layers deal with a 2D tensor, and output a 2D tensor
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
