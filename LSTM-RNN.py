@@ -6,7 +6,7 @@
 # Asked how to tokenize the last part... https://stackoverflow.com/questions/46964090/training-rnn-with-lstm-nodes/46964768#46964768
 
 # LSTM RNN with dropout for sequence classification
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense, LSTM, Dropout
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
@@ -25,30 +25,30 @@ MAX_REVIEW_LENGTH = 500         # Length of each sentence being sent in (necessa
 EMBEDDING_VECTOR_LENGTH = 2     # The specific Embedded later will have 2-length vectors to
                                 # represent each word.
 BATCH_SIZE = 64                 # Takes 64 sentences at a time and continually retrains RNN.
-NUMBER_OF_EPOCHS = 3            # Fits RNN to more accurately guess the data's political bias.
+NUMBER_OF_EPOCHS = 2            # Fits RNN to more accurately guess the data's political bias.
 DROPOUT = 0.2                   # Helps slow down overfitting of data (slower convergence rate)
-FILE_NAME = 'finalizedModel.sav'# File LSTM RNN is saved to so it can be used for website
+FILE_NAME = 'finalizedModel.h5' # File LSTM RNN is saved to so it can be used for website
 
 ##############################################################################################
 
-# fix random seed for reproducibility
+# Fix random seed for reproducibility
 numpy.random.seed(SEED)
 
 
 readData = pd.read_csv(URL, header=None, names=['label', 'message'], sep=SEPERATOR)
 
-# convert label to a numerical variable
+# Convert label to a numerical variable
 tokenizer = Tokenizer(num_words=MAX_REVIEW_LENGTH)
 tokenizer.fit_on_texts(readData.message)
-X = numpy.array(tokenizer.texts_to_matrix(readData.message)) # shape (None, 2)
+X = numpy.array(tokenizer.texts_to_matrix(readData.message)) # Shape (None, 2)
 readData['label_num'] = readData.label.map({'Liberal' : 0, 'Neutral': 0.5, 'Conservative' : 1})
 Y = numpy.array(readData.label_num)  # Either 0.0, 0.5, or 1.0 depending on label mapped to
 
 
-# load the dataset into training and testing datasets
+# Load the dataset into training and testing datasets
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=RANDOM_STATE)
 
-# create the model
+# Create the model
 model = Sequential()
 model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=MAX_REVIEW_LENGTH))
 model.add(LSTM(100))
@@ -61,3 +61,7 @@ model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=NUMBER_OF_E
 # Final evaluation of the model
 scores = model.evaluate(X_test, Y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
+
+# Save model
+model.save(FILE_NAME)               # Creates a HDF5 file to save the whole model
+                                    # (architecture, weights, and optimizer rate)
