@@ -6,13 +6,13 @@
 # Asked how to tokenize the last part... https://stackoverflow.com/questions/46964090/training-rnn-with-lstm-nodes/46964768#46964768
 
 # LSTM RNN with dropout for sequence classification
-from keras.models import Sequential, load_model
+from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
-import pickle, numpy, pandas as pd
+import numpy, pandas as pd
 
 ###################################### CONSTANTS #############################################
 
@@ -21,7 +21,7 @@ URL = 'ibcData.tsv'             # Specified dataset to gather data from.
 SEPERATOR = '\t'                # Seperator the dataset uses to divide data.
 RANDOM_STATE = 1                # Pseudo-random number generator state used for random sampling.
 TOP_WORDS = 5000                # Most used words in the dataset.
-MAX_REVIEW_LENGTH = 500         # Length of each sentence being sent in (necessary).
+MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necessary).
 EMBEDDING_VECTOR_LENGTH = 2     # The specific Embedded later will have 2-length vectors to
                                 # represent each word.
 BATCH_SIZE = 64                 # Takes 64 sentences at a time and continually retrains RNN.
@@ -64,4 +64,4 @@ print("Accuracy: %.2f%%" % (scores[1]*100))
 
 # Save model
 model.save(FILE_NAME)               # Creates a HDF5 file to save the whole model
-                                    # (architecture, weights, and optimizer rate)
+print("Model saved.\n")             # (architecture, weights, and optimizer rate)

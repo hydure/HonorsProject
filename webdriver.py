@@ -4,20 +4,23 @@
 # TODO: Run scraped texts against ML algorithm to generate a number in checkURL
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators
+from keras.models import load_model
+from keras.preprocessing.text import Tokenizer
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from string import Template
-import time
-import requests
+import time, requests, numpy
 from bs4 import BeautifulSoup
 
 # Made these global so both @app.route functions and checkURL can access them
-conservativeURL = ' '
-liberalURL      = ' '
-cLinkName       = ' '
-lLinkName       = ' '
-errMessage      = ' '
-
+conservativeURL   = ' '
+liberalURL        = ' '
+cLinkName         = ' '
+lLinkName         = ' '
+errMessage        = ' '
+loadedModel       = ' '
+tokenizer         = ' '
+MAX_REVIEW_LENGTH = 500
 
 # TODO: Run text through algorithm and determine if url should fill either conservative
 #       or liberal URL spots on webpage (will need to determine threshold values)
@@ -26,6 +29,14 @@ def checkURL(url, text, linkName):
     global liberalURL
     global cLinkName
     global lLinkName
+    global loadedModel
+    global tokenizer
+
+    # Preprocess article to predict its political bias
+    tokenizer.fit_on_texts(text)
+    preprocessedText = numpy.array(tokenizer.texts_to_matrix(text))
+
+    loadedModel.predict
     if conservativeURL == ' ':
         conservativeURL = url
         cLinkName = linkName
@@ -51,6 +62,8 @@ def results():
     global cLinkName
     global lLinkName
     global errMessage
+    global loadedModel
+    global tokenizer
 
     # Need to clear these fields to run another query
     conservativeURL = ' '
@@ -62,7 +75,9 @@ def results():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         inputString = request.form['inputString']
-
+        loadedModel = load_model('finalizedModel.h5')
+        print("Loaded model.\n")
+        tokenizer = Tokenizer(num_words=MAX_REVIEW_LENGTH)
         driver = webdriver.PhantomJS()    # Creates an invisible browser
         driver.get('https://google.com/') # Navigates to Google.com
         searchBarInput = driver.find_element_by_name('q') # Assigns variable to Google Search bar
