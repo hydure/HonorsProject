@@ -20,6 +20,7 @@ SEED = 7                        # Fixes random seed for reproducibility.
 URL = 'ibcData.tsv'             # Specified dataset to gather data from.
 SEPERATOR = '\t'                # Seperator the dataset uses to divide data.
 RANDOM_STATE = 1                # Pseudo-random number generator state used for random sampling.
+HIDDEN_LAYER_SIZE = 100         # Details the amount of nodes in a hidden layer.
 TOP_WORDS = 5000                # Most used words in the dataset.
 MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necessary).
 EMBEDDING_VECTOR_LENGTH = 2     # The specific Embedded later will have 2-length vectors to
@@ -48,14 +49,16 @@ Y = numpy.array(readData.label_num)  # Either 0.0, 0.5, or 1.0 depending on labe
 # Load the dataset into training and testing datasets
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=RANDOM_STATE)
 
-# Create the model
+# Define and compile the model
 model = Sequential()
 model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=MAX_REVIEW_LENGTH))
-model.add(LSTM(100))
+model.add(LSTM(HIDDEN_LAYER_SIZE))
 model.add(Dropout(DROPOUT))
 model.add(Dense(1, activation='sigmoid'))   # Layers deal with a 2D tensor, and output a 2D tensor
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
+
+# Fit the model
 model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE)
 
 # Final evaluation of the model

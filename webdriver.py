@@ -35,14 +35,18 @@ def checkURL(url, text, linkName):
     # Preprocess article to predict its political bias
     tokenizer.fit_on_texts(text)
     preprocessedText = numpy.array(tokenizer.texts_to_matrix(text))
-
-    loadedModel.predict
-    if conservativeURL == ' ':
-        conservativeURL = url
-        cLinkName = linkName
-    elif liberalURL == ' ':
-        liberalURL = url
-        lLinkName = linkName
+    print("Article has been tokenized and a prediction is being made.")
+    prediction = loadedModel.predict(preprocessedText, verbose = 1)
+    
+    if True:
+        print(prediction)
+    
+        if conservativeURL == ' ':
+            conservativeURL = url
+            cLinkName = linkName
+        elif liberalURL == ' ':
+            liberalURL = url
+            lLinkName = linkName
 
 app = Flask(__name__)
 
@@ -76,7 +80,6 @@ def results():
     if request.method == 'POST' and form.validate():
         inputString = request.form['inputString']
         loadedModel = load_model('finalizedModel.h5')
-        print("Loaded model.\n")
         tokenizer = Tokenizer(num_words=MAX_REVIEW_LENGTH)
         driver = webdriver.PhantomJS()    # Creates an invisible browser
         driver.get('https://google.com/') # Navigates to Google.com
@@ -246,7 +249,7 @@ def results():
                     errMessage = "Could not find enough sources on topic."
                     break                    
             
-            driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
+            #driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
         driver.quit()
         return redirect(url_for('index'))
 
