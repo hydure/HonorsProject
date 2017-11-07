@@ -70,7 +70,9 @@ def validate(model, X_test, Y_test):
     print("     Score: %.2f" % (score))
     print("  Accuracy: %.2f%%\n" % (accuracy*100))
     print("Getting percentage of correct guesses per political leaning...\n")
+
     conCount, libCount, conCorrect, libCorrect = 0, 0, 0, 0
+    
     for x in range(len(X_validate)):
     
         result = model.predict(X_validate[x].reshape(1, X_test.shape[1]), \
@@ -86,8 +88,6 @@ def validate(model, X_test, Y_test):
             libCount += 1
         else:
             conCount += 1
-
-
 
     print("Conservative Accuracy:", conCorrect / conCount * 100, "%")
     print("     Liberal Accuracy:", libCorrect / libCount * 100, "%\n")
@@ -109,7 +109,7 @@ data['text'] = data['text'].apply((lambda x: re.sub('[^a-zA-z0-9\s]', '', x)))
 
 # Eliminate duplicate whitespaces
 data['text'] = data['text'].apply((lambda x: re.sub(r'\s+', ' ', x)))
-
+print(data['text'].values)
 #debugAfterCleanUp(data);
 
 # Preprocess texts

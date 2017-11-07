@@ -18,9 +18,9 @@ liberalURL        = ' '
 cLinkName         = ' '
 lLinkName         = ' '
 errMessage        = ' '
-loadedModel       = ' '
-tokenizer         = ' '
+loadedModel       = load_model('finalizedModel.h5')
 MAX_REVIEW_LENGTH = 500
+TOP_WORDS = 5000                # Most-used words in the article.
 
 # TODO: Run text through algorithm and determine if url should fill either conservative
 #       or liberal URL spots on webpage (will need to determine threshold values)
@@ -29,17 +29,17 @@ def checkURL(url, text, linkName):
     global liberalURL
     global cLinkName
     global lLinkName
-    global loadedModel
-    global tokenizer
 
     # Preprocess article to predict its political bias
-    tokenizer.fit_on_texts(text)
-    preprocessedText = numpy.array(tokenizer.texts_to_matrix(text))
-    print("Article has been tokenized and a prediction is being made.")
-    prediction = loadedModel.predict(preprocessedText, verbose = 1)
+    tokenizer = Tokenizer(num_words=TOP_WORDS, split=' ')
+    tokenizer.fit_on_texts([text])
+    X = tokenizer.texts_to_sequences([text])
+    X = pad_sequences(X)
+    print("Article has been preprocessed and a prediction is being made...")
+
+    #TODO: Figure out prediction
     
     if True:
-        print(prediction)
     
         if conservativeURL == ' ':
             conservativeURL = url
@@ -66,7 +66,6 @@ def results():
     global cLinkName
     global lLinkName
     global errMessage
-    global loadedModel
     global tokenizer
 
     # Need to clear these fields to run another query
@@ -79,8 +78,6 @@ def results():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         inputString = request.form['inputString']
-        loadedModel = load_model('finalizedModel.h5')
-        tokenizer = Tokenizer(num_words=MAX_REVIEW_LENGTH)
         driver = webdriver.PhantomJS()    # Creates an invisible browser
         driver.get('https://google.com/') # Navigates to Google.com
         searchBarInput = driver.find_element_by_name('q') # Assigns variable to Google Search bar
