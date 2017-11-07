@@ -1,70 +1,162 @@
-# TODO: Train RNN until fairly accurate (80% without overfitting) and pickle it
-# Maybe a better version? https://machinelearnings.co/tensorflow-text-classification-615198df921
-# Got idea on how to use a custom dataset from https://stackoverflow.com/questions/412224/how-to-use-keras-rnn-for-text-classification-in-a-dataset
-# which is based on code from this webpage: https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/
-# Assumed specific batch size and number of epochs from https://stackoverflow.com/questions/505075/how-big-should-batch-size-and-number-of-epochs-be-when-fitting-a-model-in-keras
-# Asked how to tokenize the last part... https://stackoverflow.com/questions/46964090/training-rnn-with-lstm-nodes/46964768#46964768
+# This Python 3 environment comes with many helpful analytics libraries installed
+# It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
+# For example, here's several helpful packages to load in 
 
-# LSTM RNN with dropout for sequence classification
-from keras.models import Sequential
-from keras.layers import Dense, LSTM, Dropout
-from keras.layers.embeddings import Embedding
-from keras.preprocessing import sequence
+import numpy as np      # Linear Algebra
+import pandas as pd     # Data Processing, CSV file I/O (e.g. pd.read_csv)
+import re               # Regular Expression changing (CSV file cleanup)
+
 from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.models import Sequential
+from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Dropout
 from sklearn.model_selection import train_test_split
-import numpy, pandas as pd
+from keras.utils.np_utils import to_categorical
 
 ###################################### CONSTANTS #############################################
 
 SEED = 7                        # Fixes random seed for reproducibility.
-URL = 'ibcData.tsv'             # Specified dataset to gather data from.
-SEPERATOR = '\t'                # Seperator the dataset uses to divide data.
+URL = 'ibcData.csv'             # Specified dataset to gather data from.
+SEPERATOR = ','                 # Seperator the dataset uses to divide data.
 RANDOM_STATE = 1                # Pseudo-random number generator state used for random sampling.
-HIDDEN_LAYER_SIZE = 100         # Details the amount of nodes in a hidden layer.
-TOP_WORDS = 5000                # Most used words in the dataset.
+HIDDEN_LAYER_SIZE = 195         # Details the amount of nodes in a hidden layer.
+TOP_WORDS = 5000                # Most-used words in the dataset.
 MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necessary).
-EMBEDDING_VECTOR_LENGTH = 2     # The specific Embedded later will have 2-length vectors to
+EMBEDDING_VECTOR_LENGTH = 128   # The specific Embedded later will have 128-length vectors to
                                 # represent each word.
-BATCH_SIZE = 64                 # Takes 64 sentences at a time and continually retrains RNN.
-NUMBER_OF_EPOCHS = 2            # Fits RNN to more accurately guess the data's political bias.
+BATCH_SIZE = 32                 # Takes 64 sentences at a time and continually retrains RNN.
+NUMBER_OF_EPOCHS = 10           # Fits RNN to more accurately guess the data's political bias.
+VERBOSE = 2                     # Gives a lot of information when predicting/evaluating model.
+NONVERBOSE = 0                  # Gives only results when predicting/evaluating model.
+VALIDATION_SIZE = 1000          # The size that you want your validation sets to be.
 DROPOUT = 0.2                   # Helps slow down overfitting of data (slower convergence rate)
 FILE_NAME = 'finalizedModel.h5' # File LSTM RNN is saved to so it can be used for website
 
-##############################################################################################
+###################################### FUNCTIONS #############################################
 
-# Fix random seed for reproducibility
-numpy.random.seed(SEED)
+# Function to see what your CSV file looks after it is cleaned up
+def debugAfterCleanUp(data):
+    print(data)
+    print(data[ data['bias'] == 'Conservative'].size)
+    print(data[ data['bias'] == 'Liberal'].size)
+
+# Checks the shape of the below four datasets
+def checkShapes(X_train, X_test, Y_train, Y_test):
+    print(X_train.shape,Y_train.shape)
+    print(X_test.shape,Y_test.shape)
+
+# Prints a summary of the model
+def printModelSummary(model):
+    print(model.summary())
+
+# Evaluates the model
+def evaluate(model, X_test, Y_test):
+    score, accuracy = model.evaluate(X_test, Y_test, verbose = VERBOSE)
+    print("Evaluation:")
+    print("     Score: %.2f" % (score))
+    print("  Accuracy: %.2f%%\n" % (accuracy * 100))
+
+# Validates the model by extracting a validation set and
+# measuring the correct number of guesses
+def validate(model, X_test, Y_test):
+
+    X_validate = X_test[-VALIDATION_SIZE:]
+    Y_validate = Y_test[-VALIDATION_SIZE:]
+    X_test = X_test[:-VALIDATION_SIZE]
+    Y_test = Y_test[:-VALIDATION_SIZE]
+    score, accuracy = model.evaluate(X_test, Y_test, verbose = VERBOSE, \
+                            batch_size = BATCH_SIZE)
+    print("Validation:")
+    print("     Score: %.2f" % (score))
+    print("  Accuracy: %.2f%%\n" % (accuracy*100))
+    print("Getting percentage of correct guesses per political leaning...\n")
+    conCount, libCount, conCorrect, libCorrect = 0, 0, 0, 0
+    for x in range(len(X_validate)):
+    
+        result = model.predict(X_validate[x].reshape(1, X_test.shape[1]), \
+                                batch_size = 1, verbose = VERBOSE)[0]
+   
+        if np.argmax(result) == np.argmax(Y_validate[x]):
+            if np.argmax(Y_validate[x]) == 0:
+                libCorrect += 1
+            else:
+                conCorrect += 1
+       
+        if np.argmax(Y_validate[x]) == 0:
+            libCount += 1
+        else:
+            conCount += 1
 
 
-readData = pd.read_csv(URL, header=None, names=['label', 'message'], sep=SEPERATOR)
 
-# Convert label to a numerical variable
-tokenizer = Tokenizer(num_words=MAX_REVIEW_LENGTH)
-tokenizer.fit_on_texts(readData.message)
-X = numpy.array(tokenizer.texts_to_matrix(readData.message)) # Shape (None, 2)
-readData['label_num'] = readData.label.map({'Liberal' : 0, 'Neutral': 0.5, 'Conservative' : 1})
-Y = numpy.array(readData.label_num)  # Either 0.0, 0.5, or 1.0 depending on label mapped to
+    print("Conservative Accuracy:", conCorrect / conCount * 100, "%")
+    print("     Liberal Accuracy:", libCorrect / libCount * 100, "%\n")
 
+def save(model):
+    model.save(FILE_NAME)               # Creates a HDF5 file to save the whole model
+    print("Model saved.\n")             # (e.g. its architecture, weights, and optimizer rate)
 
-# Load the dataset into training and testing datasets
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=RANDOM_STATE)
+#################################### PREPARE DATA ############################################
 
-# Define and compile the model
+# Read the data from the CSV file by column
+data = pd.read_csv(URL, header = None, names = ['bias', 'text'], sep = SEPERATOR)
+
+# Make all characters lowercase if they are not already
+data['text'] = data['text'].apply(lambda x: x.lower())
+
+# Take out all superfluous ASCII characters
+data['text'] = data['text'].apply((lambda x: re.sub('[^a-zA-z0-9\s]', '', x)))
+
+# Eliminate duplicate whitespaces
+data['text'] = data['text'].apply((lambda x: re.sub(r'\s+', ' ', x)))
+
+#debugAfterCleanUp(data);
+
+# Preprocess texts
+tokenizer = Tokenizer(num_words=TOP_WORDS, split=' ')
+tokenizer.fit_on_texts(data['text'].values)
+X = tokenizer.texts_to_sequences(data['text'].values)
+X = pad_sequences(X)
+
+# Declare the train and test datasets
+Y = pd.get_dummies(data['bias']).values
+X_train, X_test, Y_train, Y_test = \
+            train_test_split(X, Y, test_size = 0.33, random_state = SEED)
+
+#checkShapes(X_train, X_test, Y_train, Y_test)
+
+##################################### TRAIN MODEL ############################################
+
+# Define the model
 model = Sequential()
-model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=MAX_REVIEW_LENGTH))
+model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, \
+            input_length=X.shape[1]))
+model.add(SpatialDropout1D(DROPOUT))
 model.add(LSTM(HIDDEN_LAYER_SIZE))
 model.add(Dropout(DROPOUT))
-model.add(Dense(1, activation='sigmoid'))   # Layers deal with a 2D tensor, and output a 2D tensor
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-print(model.summary())
+model.add(Dense(2, activation='softmax'))
+
+# Compile the model
+model.compile(loss='categorical_crossentropy', optimizer='adam', \
+                metrics=['accuracy'])
+
+#printModelSummary(model)
 
 # Fit the model
-model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE)
+model.fit(X_train, Y_train, validation_data=(X_test, Y_test), \
+            epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE)
 
-# Final evaluation of the model
-scores = model.evaluate(X_test, Y_test, verbose=0)
-print("Accuracy: %.2f%%" % (scores[1]*100))
+print("*" * 75)
 
-# Save model
-model.save(FILE_NAME)               # Creates a HDF5 file to save the whole model
-print("Model saved.\n")             # (architecture, weights, and optimizer rate)
+# Evaluate the model
+evaluate(model, X_test, Y_test)
+
+# Validate the module
+validate(model, X_test, Y_test)
+
+print("*" * 75 + '\n')
+
+# Save the model
+save(model)
+
+##############################################################################################
