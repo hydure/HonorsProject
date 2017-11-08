@@ -25,7 +25,7 @@ MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necess
 EMBEDDING_VECTOR_LENGTH = 128   # The specific Embedded later will have 128-length vectors to
                                 # represent each word.
 BATCH_SIZE = 32                 # Takes 64 sentences at a time and continually retrains RNN.
-NUMBER_OF_EPOCHS = 10           # Fits RNN to more accurately guess the data's political bias.
+NUMBER_OF_EPOCHS = 1           # Fits RNN to more accurately guess the data's political bias.
 VERBOSE = 2                     # Gives a lot of information when predicting/evaluating model.
 NONVERBOSE = 0                  # Gives only results when predicting/evaluating model.
 VALIDATION_SIZE = 1000          # The size that you want your validation sets to be.
@@ -116,12 +116,12 @@ print(data['text'].values)
 tokenizer = Tokenizer(num_words=TOP_WORDS, split=' ')
 tokenizer.fit_on_texts(data['text'].values)
 X = tokenizer.texts_to_sequences(data['text'].values)
-X = pad_sequences(X)
+X = pad_sequences(X, maxlen=1000)
 
 # Declare the train and test datasets
 Y = pd.get_dummies(data['bias']).values
 X_train, X_test, Y_train, Y_test = \
-            train_test_split(X, Y, test_size = 0.33, random_state = SEED)
+            train_test_split(X, Y, test_size = 0.80, random_state = SEED)
 
 #checkShapes(X_train, X_test, Y_train, Y_test)
 
@@ -129,8 +129,7 @@ X_train, X_test, Y_train, Y_test = \
 
 # Define the model
 model = Sequential()
-model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, \
-            input_length=X.shape[1]))
+model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=X.shape[1]))   #X.shape[1] is the 72 
 model.add(SpatialDropout1D(DROPOUT))
 model.add(LSTM(HIDDEN_LAYER_SIZE))
 model.add(Dropout(DROPOUT))

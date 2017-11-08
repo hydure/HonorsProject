@@ -5,6 +5,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators
 from keras.models import load_model
+from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -34,8 +35,11 @@ def checkURL(url, text, linkName):
     tokenizer = Tokenizer(num_words=TOP_WORDS, split=' ')
     tokenizer.fit_on_texts([text])
     X = tokenizer.texts_to_sequences([text])
-    X = pad_sequences(X)
+    X = pad_sequences(X, maxlen=1000)
     print("Article has been preprocessed and a prediction is being made...")
+    
+    prediction = loadedModel.predict(X)
+    #print(prediction)
 
     #TODO: Figure out prediction
     
