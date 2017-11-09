@@ -1,7 +1,6 @@
 # found out how to not display web browser when using selenium here:
 # https://stackoverflow.com/questions/13287490/is-there-a-way-to-use-phantomjs-in-python
 
-# TODO: Run scraped texts against ML algorithm to generate a number in checkURL
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators
 from keras.models import load_model
@@ -13,7 +12,9 @@ from string import Template
 import time, requests, numpy
 from bs4 import BeautifulSoup
 
-# Made these global so both @app.route functions and checkURL can access them
+############################### GLOBAL VARIABLES #######################################
+
+# Made these global so both @app.route functions and checkURL can access them.
 conservativeURL   = ' '
 liberalURL        = ' '
 cLinkName         = ' '
@@ -22,9 +23,12 @@ errMessage        = ' '
 loadedModel       = load_model('finalizedModel.h5')
 MAX_REVIEW_LENGTH = 500
 TOP_WORDS = 5000                # Most-used words in the article.
+NEUTRAL = 0.5                   # Article is predicted to not be politcally biased.
 
-# TODO: Run text through algorithm and determine if url should fill either conservative
-#       or liberal URL spots on webpage (will need to determine threshold values)
+################################### FUNCTIONS ##########################################
+
+# Runs article through algorithm and determines if it is politically biased and how.
+# If politically biased and its biased URL isn't filled, fill its bias' URL slot.
 def checkURL(url, text, linkName):
     global conservativeURL
     global liberalURL
@@ -38,19 +42,19 @@ def checkURL(url, text, linkName):
     X = pad_sequences(X, maxlen=1000)
     print("Article has been preprocessed and a prediction is being made...")
     
+    # Predict if the article is politically biased, and, if so, which way is it biased.
     prediction = loadedModel.predict(X)
-    #print(prediction)
 
-    #TODO: Figure out prediction
-    
-    if True:
-    
-        if conservativeURL == ' ':
+    # Fill proper URLs based on prediction.
+    if conservativeURL == ' ' and prediction[0][0] > NEUTRAL:
             conservativeURL = url
             cLinkName = linkName
-        elif liberalURL == ' ':
+
+    if liberalURL == ' ' and prediction[0][0] < NEUTRAL:
             liberalURL = url
             lLinkName = linkName
+
+################################### FLASK APP ##########################################
 
 app = Flask(__name__)
 
@@ -81,33 +85,38 @@ def results():
     
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
+
         inputString = request.form['inputString']
-        driver = webdriver.PhantomJS()    # Creates an invisible browser
-        driver.get('https://google.com/') # Navigates to Google.com
-        searchBarInput = driver.find_element_by_name('q') # Assigns variable to Google Search bar
+        driver = webdriver.PhantomJS()    # Creates an invisible browser.
+        driver.get('https://google.com/') # Navigates to Google.com.
+        searchBarInput = driver.find_element_by_name('q') # Assigns query to Google Search bar.
+        
         if inputString != '':
+            
             searchBarInput.send_keys(inputString + " news") # what you are searching for
             searchBarInput.send_keys(Keys.RETURN) # Hit <RETURN> so Google begins searching
             time.sleep(1) # sleep for a bit so the results webpage will be rendered
 
-            # scrape first liberal and first conservative websites that are in the top 10 news websites
-            # (top 10 according to http://blog.feedspot.com/usa_news_websites/ 's metrics)
+            # Scrape liberal and conservative websites that are in the top 10 news websites
+            # (top 10 according to http://blog.feedspot.com/usa_news_websites/ 's metrics).
             urls = driver.find_elements_by_css_selector('h3.r a')
 
             # Continue mining until conservative- and liberalURL are found
             while conservativeURL == ' ' or liberalURL == ' ':
+                
                 urls = driver.find_elements_by_css_selector('h3.r a')
                 for url in urls:
+                    
                     if conservativeURL != ' ' and liberalURL != ' ':
                         break
 
-                    # Need to remove end of links that make some webpages impossible
-                    # to link to via my webpage
+                    # Need to remove end of links that make some webpages 
+                    # impossible to create a usuable link for my webpage.
                     stoppingPoint = url.get_attribute('href').index('&')
                     url = url.get_attribute('href')[29 : stoppingPoint]
-                    print(url)
+                    # print(url)
 
-                    # The queried search page is a url and needs to be skipped
+                    # The queried search page is a url and needs to be skipped.
                     if '?q=' in url:
                         continue
 
@@ -229,7 +238,7 @@ def results():
                         #print(text)
                         checkURL(url, text, linkName)
 
-                    if "washingtonpost.com" in url: # requested
+                    if "washingtonpost.com" in url: # Requested by Hayden Le.
                         linkName = "Washington Post Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -243,16 +252,20 @@ def results():
                 if conservativeURL != ' ' and liberalURL != ' ':
                     break
 
-                # Go to the next page to continue the process
+                # Go to the next page, if possible, to continue the process.
                 try:
                     nextPage = driver.find_element_by_link_text("Next").click()
+                    
                 except:
                     errMessage = "Could not find enough sources on topic."
                     break                    
             
-            #driver.save_screenshot('screen.png') # save a screenshot to disk to see what we're looking at
+            # driver.save_screenshot('screen.png') # Save a screenshot to see operation.
+
         driver.quit()
         return redirect(url_for('index'))
+
+#########################################################################################
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
