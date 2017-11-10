@@ -1,7 +1,3 @@
-# This Python 3 environment comes with many helpful analytics libraries installed
-# It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
-# For example, here's several helpful packages to load in 
-
 import numpy as np      # Linear Algebra
 import pandas as pd     # Data Processing, CSV file I/O (e.g. pd.read_csv)
 import re               # Regular Expression changing (CSV file cleanup)
@@ -54,7 +50,7 @@ def printModelSummary(model):
 def evaluate(model, X_test, Y_test):
     score, accuracy = model.evaluate(X_test, Y_test, verbose = VERBOSE)
     print("Evaluation:")
-    print("     Score: %.2f" % (score))
+    print("  F1 Score: %.2f" % (score))
     print("  Accuracy: %.2f%%\n" % (accuracy * 100))
 
 # Validates the model by extracting a validation set and
@@ -68,7 +64,7 @@ def validate(model, X_test, Y_test):
     score, accuracy = model.evaluate(X_test, Y_test, verbose = VERBOSE, \
                             batch_size = BATCH_SIZE)
     print("Validation:")
-    print("     Score: %.2f" % (score))
+    print("  F1 Score: %.2f" % (score))
     print("  Accuracy: %.2f%%\n" % (accuracy*100))
     print("Getting percentage of correct guesses per political leaning...\n")
 
