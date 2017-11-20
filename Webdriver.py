@@ -23,7 +23,7 @@ errMessage        = ' '
 loadedModel       = load_model('finalizedModel.h5')
 MAX_REVIEW_LENGTH = 500
 TOP_WORDS = 5000                # Most-used words in the article.
-NEUTRAL = 0.5                   # Article is predicted to not be politcally biased.
+NEUTRAL = 0.5                   # Article is predicted to not be politically biased.
 
 ################################### FUNCTIONS ##########################################
 
