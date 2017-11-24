@@ -16,13 +16,13 @@ URL = 'ibcData.csv'             # Specified dataset to gather data from.
 SEPERATOR = ','                 # Seperator the dataset uses to divide data.
 RANDOM_STATE = 1                # Pseudo-random number generator state used for random sampling.
 PADDING_LENGTH = 1000           # The amount of words allowed per piece of text.
-HIDDEN_LAYER_SIZE = 195         # Details the amount of nodes in a hidden layer.
+HIDDEN_LAYER_SIZE = 300         # Details the amount of nodes in a hidden layer.
 TOP_WORDS = 5000                # Most-used words in the dataset.
 MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necessary).
 EMBEDDING_VECTOR_LENGTH = 128   # The specific Embedded later will have 128-length vectors to
                                 # represent each word.
-BATCH_SIZE = 32                 # Takes 64 sentences at a time and continually retrains RNN.
-NUMBER_OF_EPOCHS = 5            # Fits RNN to more accurately guess the data's political bias.
+BATCH_SIZE = 32                 # Takes 32 sentences at a time and continually retrains RNN.
+NUMBER_OF_EPOCHS = 3            # Fits RNN to more accurately guess the data's political bias.
 VERBOSE = 2                     # Gives a lot of information when predicting/evaluating model.
 NONVERBOSE = 0                  # Gives only results when predicting/evaluating model.
 VALIDATION_SIZE = 1000          # The size that you want your validation sets to be.
