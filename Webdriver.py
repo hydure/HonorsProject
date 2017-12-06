@@ -260,7 +260,7 @@ def results():
                     errMessage = "Could not find enough sources on topic."
                     break                    
             
-            # driver.save_screenshot('screen.png') # Save a screenshot to see operation.
+            driver.save_screenshot('screen.png') # Save a screenshot to see operation.
 
         driver.quit()
         return redirect(url_for('index'))
