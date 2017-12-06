@@ -22,7 +22,7 @@ MAX_REVIEW_LENGTH = 500         # Char length of each text being sent in (necess
 EMBEDDING_VECTOR_LENGTH = 128   # The specific Embedded later will have 128-length vectors to
                                 # represent each word.
 BATCH_SIZE = 32                 # Takes 32 sentences at a time and continually retrains RNN.
-NUMBER_OF_EPOCHS = 3            # Fits RNN to more accurately guess the data's political bias.
+NUMBER_OF_EPOCHS = 100          # Fits RNN to more accurately guess the data's political bias.
 VERBOSE = 2                     # Gives a lot of information when predicting/evaluating model.
 NONVERBOSE = 0                  # Gives only results when predicting/evaluating model.
 VALIDATION_SIZE = 1000          # The size that you want your validation sets to be.
@@ -138,9 +138,12 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', \
 
 #printModelSummary(model)
 
+# Stops fitting the model when the improvement is negligible to help prevent over-fitting
+earlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
+
 # Fit the model
 model.fit(X_train, Y_train, validation_data=(X_test, Y_test), \
-            epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE)
+            epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE, callbacks=[early_stopping])
 
 print("*" * 75)
 
