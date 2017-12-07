@@ -143,7 +143,7 @@ earlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, p
 
 # Fit the model
 model.fit(X_train, Y_train, validation_data=(X_test, Y_test), \
-            epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE, callbacks=[early_stopping])
+            epochs=NUMBER_OF_EPOCHS, batch_size=BATCH_SIZE, callbacks=[earlyStopping])
 
 print("*" * 75)
 
