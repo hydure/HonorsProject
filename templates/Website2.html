@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Fair & Balanced News</title>
+        <meta charset=utf-8> 
+    </head>
+    <body>
+        <h1 style='text-align: center;'>Fair & Balanced News</h1>
+        <div style="width:500px; margin: 0 auto">
+            <h4 style='text-align: center;'>What news do you want to search for?</h4>
+            <form method=post action="/results" style="text-align: center;">
+                <input type="text" id="inputString" name="inputString"/>
+                <input type=submit value='Search' name='search_btn'>
+            </form>
+            <h3 style='text-align: center;'>{{ errMessage }}</h3>
+            <table align="center" border="1">
+                <tr>
+                    <th>Most Popular Liberal View</th>
+                    <th>Most Popular Neutral View</th>
+                    <th>Most Popular Conservative View</th>
+                </tr>
+                <tr>
+                    <td style='text-align: center;'><a href="{{ liberalURL }}">{{ lLinkName }}</a></td>
+                    <td style='text-align: center;'><a href="{{ neutralURL }}">{{ nLinkName }}</a></td>
+                    <td style='text-align: center;'><a href="{{ conservativeURL }}">{{ cLinkName }}</a></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
