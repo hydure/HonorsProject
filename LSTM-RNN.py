@@ -77,14 +77,14 @@ def validate(model, X_test, Y_test):
    
         if np.argmax(result) == np.argmax(Y_validate[x]):
             if np.argmax(Y_validate[x]) == 0:
-                libCorrect += 1
-            else:
                 conCorrect += 1
+            else:
+                libCorrect += 1
        
         if np.argmax(Y_validate[x]) == 0:
-            libCount += 1
-        else:
             conCount += 1
+        else:
+            libCount += 1
 
     print("Conservative Accuracy:", conCorrect / conCount * 100, "%")
     print("     Liberal Accuracy:", libCorrect / libCount * 100, "%\n")

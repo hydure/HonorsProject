@@ -20,6 +20,8 @@ liberalURL        = ' '
 cLinkName         = ' '
 lLinkName         = ' '
 errMessage        = ' '
+lNumber           = ' '
+cNumber           = ' '
 loadedModel       = load_model('finalizedModel.h5')
 MAX_REVIEW_LENGTH = 500
 TOP_WORDS = 5000                # Most-used words in the article.
@@ -34,6 +36,8 @@ def checkURL(url, text, linkName):
     global liberalURL
     global cLinkName
     global lLinkName
+    global lNumber
+    global cNumber
 
     # Preprocess article to predict its political bias
     tokenizer = Tokenizer(num_words=TOP_WORDS, split=' ')
@@ -49,10 +53,13 @@ def checkURL(url, text, linkName):
     if conservativeURL == ' ' and prediction[0][0] > NEUTRAL:
             conservativeURL = url
             cLinkName = linkName
+            cNumber = prediction[0][0]
 
     if liberalURL == ' ' and prediction[0][0] < NEUTRAL:
             liberalURL = url
             lLinkName = linkName
+            lNumber = prediction[0][0]
+
 
 ################################### FLASK APP ##########################################
 
@@ -65,7 +72,7 @@ class SearchForm(Form):
 def index():
     return render_template('Website.html', cLinkName=cLinkName, lLinkName=lLinkName, \
                             conservativeURL=conservativeURL, liberalURL=liberalURL, \
-                            errMessage=errMessage)
+                            errMessage=errMessage, lNumber=lNumber, cNumber=cNumber)
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
@@ -75,6 +82,8 @@ def results():
     global lLinkName
     global errMessage
     global tokenizer
+    global cNumber
+    global lNumber
 
     # Need to clear these fields to run another query
     conservativeURL = ' '
@@ -82,6 +91,8 @@ def results():
     cLinkName       = ' '
     lLinkName       = ' '
     errMessage      = ' '
+    cNumber         = 0
+    lNumber         = 0
     
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -121,8 +132,6 @@ def results():
                         continue
 
                     if "cnn.com" in url: # 1
-                        #cLinkName = "CNN Article"
-                        #conservativeURL = url
                         linkName = "CNN Article"
                         
                         lookAtPage = requests.get(url)
@@ -135,8 +144,6 @@ def results():
                         checkURL(url, text, linkName)
 
                     if "nytimes.com" in url: # 2
-                        #lLinkName = "NY Times Article"
-                        #liberalURL = url
                         linkName = "NY Times Article"
                         lookAtPage = requests.get(url)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
@@ -250,6 +257,7 @@ def results():
                         checkURL(url, text, linkName)
 
                 if conservativeURL != ' ' and liberalURL != ' ':
+                    errMessage = "Search for \"" + inputString + "\" has completed successfully!"
                     break
 
                 # Go to the next page, if possible, to continue the process.
