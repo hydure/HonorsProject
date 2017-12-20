@@ -5,6 +5,7 @@ import re               # Regular Expression changing (CSV file cleanup)
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
+from keras.callbacks import EarlyStopping
 from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D, Dropout
 from sklearn.model_selection import train_test_split
 from keras.utils.np_utils import to_categorical
@@ -139,7 +140,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', \
 #printModelSummary(model)
 
 # Stops fitting the model when the improvement is negligible to help prevent over-fitting
-earlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
+earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
 
 # Fit the model
 model.fit(X_train, Y_train, validation_data=(X_test, Y_test), \
