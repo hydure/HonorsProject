@@ -111,7 +111,7 @@ def results():
             # Scrape liberal and conservative websites that are in the top 10 news websites
             # (top 10 according to http://blog.feedspot.com/usa_news_websites/ 's metrics).
             urls = driver.find_elements_by_css_selector('h3.r a')
-
+            headers = {'Accept-Encoding': 'gzip'}
             # Continue mining until conservative- and liberalURL are found
             while conservativeURL == ' ' or liberalURL == ' ':
                 
@@ -134,7 +134,7 @@ def results():
                     if "cnn.com" in url: # 1
                         linkName = "CNN Article"
                         
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('div', {"class":"zn-body__paragraph"})
                         text = ''
@@ -145,7 +145,7 @@ def results():
 
                     if "nytimes.com" in url: # 2
                         linkName = "NY Times Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p', {"class":"story-body-text story-content"})
                         text = ''
@@ -156,7 +156,7 @@ def results():
 
                     if "huffingtonpost.com" in url: # 3
                         linkName = "Huffington Post Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p', {"class":"p1"})
                         text = ''
@@ -167,7 +167,7 @@ def results():
 
                     if "foxnews.com" in url: # 4
                         linkName = "Fox News Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''
@@ -179,7 +179,7 @@ def results():
 
                     if "usatoday.com" in url: # 5
                         linkName = "USA Today Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p', {"class":"p-text"})
                         text = ''
@@ -190,7 +190,7 @@ def results():
 
                     if "reuters.com" in url: # 6
                         linkName = "Reuters Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''
@@ -202,7 +202,7 @@ def results():
 
                     if "politico.com" in url: # 7
                         linkName = "Politico Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''
@@ -213,7 +213,7 @@ def results():
 
                     if "yahoo.com/news" in url and "tagged" not in url: # 8
                         linkName = "Yahoo! News Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p', {"class":"canvas-atom"})
                         text = ''
@@ -224,7 +224,7 @@ def results():
 
                     if "npr.org" in url: # 9
                         linkName = "NPR Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''
@@ -236,7 +236,7 @@ def results():
 
                     if "latimes.com" in url: # 10
                         linkName = "LA Times Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''
@@ -247,7 +247,7 @@ def results():
 
                     if "washingtonpost.com" in url: # Requested by Hayden Le.
                         linkName = "Washington Post Article"
-                        lookAtPage = requests.get(url)
+                        lookAtPage = requests.get(url, headers=headers)
                         soup = BeautifulSoup(lookAtPage.text, "html.parser")
                         paragraphs = soup.find_all('p')
                         text = ''

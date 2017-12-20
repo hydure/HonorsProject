@@ -127,7 +127,7 @@ X_train, X_test, Y_train, Y_test = \
 # Define the model
 model = Sequential()
 model.add(Embedding(TOP_WORDS, EMBEDDING_VECTOR_LENGTH, input_length=X.shape[1]))
-model.add(SpatialDropout1D(DROPOUT))
+model.add(Dropout(DROPOUT))
 model.add(LSTM(HIDDEN_LAYER_SIZE))
 model.add(Dropout(DROPOUT))
 model.add(Dense(2, activation='softmax'))
