@@ -138,7 +138,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', \
 #printModelSummary(model)
 
 # Stops fitting the model when the improvement is negligible to help prevent over-fitting
-earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
+earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=NONVERBOSE, mode='auto')
 
 # Fit the model
 model.fit(X_train, Y_train, validation_data=(X_test, Y_test), \
